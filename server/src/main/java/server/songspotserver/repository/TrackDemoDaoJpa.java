@@ -1,4 +1,7 @@
 package server.songspotserver.repository;
 
-public class musicDaoJpa {
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class TrackDemoDaoJpa {
 }

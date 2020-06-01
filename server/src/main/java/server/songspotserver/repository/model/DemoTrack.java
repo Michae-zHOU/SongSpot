@@ -1,10 +1,15 @@
 package server.songspotserver.repository.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "track_demo")
-public class TrackDemo {
+public class DemoTrack {
 
     @Id
     @GeneratedValue(generator = "track_demo_generator")
@@ -15,20 +20,31 @@ public class TrackDemo {
     )
     private Long id;
 
+    @Column(name = "filename", nullable = false, updatable = true)
     private String fileName;
 
+    @Column(name = "file_type", nullable = false, updatable = true)
     private String fileType;
+
+    @Column(name = "artist", nullable = false, updatable = true)
+    private String artist;
+
+    @Column(name="curators")
+    @ElementCollection(targetClass=String.class)
+    private Set<String> curators = new HashSet<>();
 
     @Lob
     private byte[] data;
 
-    public TrackDemo() {
+    public DemoTrack() {
     }
 
-    public TrackDemo(Long id, String fileName, String fileType, byte[] data) {
+    public DemoTrack(Long id, String fileName, String fileType, String artist, List<String> curators, byte[] data) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
+        this.artist = artist;
+        this.curators = curators;
         this.data = data;
     }
 
@@ -62,5 +78,21 @@ public class TrackDemo {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public List<String> getCurators() {
+        return curators;
+    }
+
+    public void setCurators(List<String> curators) {
+        this.curators = curators;
     }
 }
