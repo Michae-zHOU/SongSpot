@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "demo_track")
-public class DemoTrack {
+public class DemoTrack extends AuditModel {
 
     @Id
     @GeneratedValue(generator = "demo_track_generator")
@@ -32,18 +32,6 @@ public class DemoTrack {
 
     @Lob
     private byte[] data;
-
-    public DemoTrack() {
-    }
-
-    public DemoTrack(Long id, String fileName, String fileType, String artist, Set<String> curators, byte[] data) {
-        this.id = id;
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.artist = artist;
-        this.curators = curators;
-        this.data = data;
-    }
 
     public Long getId() {
         return id;

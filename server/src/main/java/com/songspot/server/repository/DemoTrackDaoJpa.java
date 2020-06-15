@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +27,8 @@ public class DemoTrackDaoJpa {
         demoTrack.setData(createDemoTrack.getData());
         demoTrack.setFileName(createDemoTrack.getFilename());
         demoTrack.setFileType(createDemoTrack.getFileType());
+        demoTrack.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        demoTrack.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
         this.demoTrackRepository.save(demoTrack);
         return demoTrack.toPresentationModel();
@@ -36,8 +40,9 @@ public class DemoTrackDaoJpa {
                 .orElseThrow(() -> new ResourceNotFoundException("Track by " + trackId + " not found"));
         Set<String> curators = demoTrack.getCurators();
         curators.add(curator);
-
         demoTrack.setCurators(curators);
+        demoTrack.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+
         this.demoTrackRepository.save(demoTrack);
         return demoTrack.toPresentationModel();
     }
