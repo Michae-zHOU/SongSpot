@@ -13,18 +13,23 @@ public enum UserType {
     }
 
     public static UserType getType(int type) {
-        switch (type) {
-            case 0:
-                return ARTIST;
-            case 1:
-                return CURATOR;
-            case 2:
-                return ADMIN;
-            case 3:
-                return SUPERUSER;
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (type) {
+            case 0 -> ARTIST;
+            case 1 -> CURATOR;
+            case 2 -> ADMIN;
+            case 3 -> SUPERUSER;
+            default -> throw new IllegalArgumentException("No valid user type found");
+        };
+    }
+
+    public static UserType getType(String type) {
+        return switch (type.toLowerCase()) {
+            case "artist" -> ARTIST;
+            case "curator" -> CURATOR;
+            case "admin" -> ADMIN;
+            case "superuser" -> SUPERUSER;
+            default -> throw new IllegalArgumentException("No valid user type found");
+        };
     }
 
     public int getUserType() {

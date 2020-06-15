@@ -19,7 +19,10 @@ public class User {
 
     private List<String> genres;
 
-    public User() {}
+    private String token;
+
+    public User() {
+    }
 
     public Long getId() {
         return id;
@@ -59,5 +62,13 @@ public class User {
 
     public void setGenres(List<String> genres) {
         this.genres = genres;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

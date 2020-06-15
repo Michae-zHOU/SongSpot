@@ -19,17 +19,22 @@ public class UserRegisterParam {
 
     private String description;
 
+    @Size(min = 1, max = 100)
+    private String website;
+
     private Byte[] avatar;
 
     public UserRegisterParam(@NotBlank @Size(min = 1, max = 100) String username,
                              @NotBlank @Size(min = 1, max = 100) String password,
                              @NotBlank @Size(min = 1, max = 100) String email,
                              String description,
+                             String website,
                              Byte[] avatar) {
         this.username = username;
         this.password = password;
         this.description = description;
         this.email = email;
+        this.website = website;
         this.avatar = avatar;
     }
 
@@ -63,6 +68,14 @@ public class UserRegisterParam {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public Byte[] getAvatar() {
