@@ -1,0 +1,20 @@
+.homepage {
+  //   background: url("../../assets/Homebg.png");
+  //   filter: grayscale(80%);
+  //   height: 100%;
+  //   background-repeat: no-repeat;
+  //   background-size: cover;
+
+  &__intro {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  &__subtitle {
+    margin-top: 20px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+}
