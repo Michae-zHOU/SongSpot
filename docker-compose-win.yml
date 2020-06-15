@@ -17,10 +17,7 @@ services:
     environment:
       spring_profiles_active: dev
     volumes:
-      - /c/docker/volumes/log:/c/var/log
-    depends_on:
-      database:
-        condition: service_healthy
+      - /d/docker/volumes/log:/var/log
 
   cache:
     image: redis
@@ -39,7 +36,7 @@ services:
       POSTGRES_PASSWORD: docker
       POSTGRES_DB: postgres
     volumes:
-      - /c/docker/volumes/postgres:/c/var/lib/postgresql/data
+      - /d/docker/volumes/postgres:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
