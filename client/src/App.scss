@@ -1,0 +1,15 @@
+body,
+html,
+#root,
+.main {
+  height: 100%;
+}
+.App {
+  text-align: center;
+  height: 100%;
+  padding: 4px;
+}
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
