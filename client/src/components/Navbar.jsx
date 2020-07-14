@@ -9,9 +9,19 @@ import { theme } from "../colorPlatte";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import Container from "@material-ui/core/Container";
-export const Navbar = props => {
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+export const Navbar = (props) => {
+  const { isLoggedin, userType, toggleDrawer } = props;
+  const navClass = `navbar ${isLoggedin ? "loggedIn" : ""}`;
+  const handleBurgerClick = () => {
+    switch (userType) {
+      case "artist":
+        toggleDrawer("artistNav", {});
+    }
+  };
   return (
-    <Container className="navbar">
+    <Container className={navClass}>
       <ThemeProvider theme={theme}>
         <AppBar position="fixed" color="primary">
           <Toolbar>
@@ -19,19 +29,35 @@ export const Navbar = props => {
               justify="space-between" // Add it here :)
               container
             >
+              {!!isLoggedin && (
+                <Grid item>
+                  <Button color="inherit" onClick={handleBurgerClick}>
+                    <MenuIcon />
+                  </Button>
+                </Grid>
+              )}
               <Grid item>
                 <Typography variant="title" color="inherit">
                   <Link to="/"> SONG SPOT</Link>
                 </Typography>
               </Grid>
-              <Grid item>
-                <Button color="inherit">
-                  <Link to="/curator">Curators</Link>
-                </Button>
-                <Button color="inherit">
-                  <Link to="/artist">Artists</Link>
-                </Button>
-              </Grid>
+              {!!isLoggedin && (
+                <Grid item>
+                  <Button color="inherit">
+                    <AccountCircleIcon />
+                  </Button>
+                </Grid>
+              )}
+              {!isLoggedin && (
+                <Grid item>
+                  <Button color="inherit">
+                    <Link to="/curator">Curators</Link>
+                  </Button>
+                  <Button color="inherit">
+                    <Link to="/artist">Artists</Link>
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </Toolbar>
         </AppBar>
