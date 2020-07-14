@@ -7,4 +7,24 @@
   &__title {
     margin-bottom: 20px;
   }
+
+  &__musicGenre {
+    padding: 50px;
+    > div {
+      margin: 3px;
+    }
+  }
+
+  &__customGenre {
+    padding: 50px;
+  }
+  &__submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 100px;
+
+    > button {
+      margin: 6px;
+    }
+  }
 }
