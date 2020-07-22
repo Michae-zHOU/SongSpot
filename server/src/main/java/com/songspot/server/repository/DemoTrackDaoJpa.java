@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -45,6 +46,10 @@ public class DemoTrackDaoJpa {
 
         this.demoTrackRepository.save(demoTrack);
         return demoTrack.toPresentationModel();
+    }
+
+    public List<com.songspot.server.controller.model.DemoTrack> getTracks(String requester) {
+        List<DemoTrack> demoTracks = this.demoTrackRepository.
     }
 
 }

@@ -15,22 +15,15 @@ public enum Genre {
     }
 
     public static Genre getType(int type) {
-        switch (type) {
-            case 0:
-                return HOUSE;
-            case 1:
-                return HARDSTYLE;
-            case 2:
-                return LOFI;
-            case 3:
-                return DUBSTEP;
-            case 4:
-                return HIPHOP;
-            case 5:
-                return CUSTOM;
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (type) {
+            case 0 -> HOUSE;
+            case 1 -> HARDSTYLE;
+            case 2 -> LOFI;
+            case 3 -> DUBSTEP;
+            case 4 -> HIPHOP;
+            case 5 -> CUSTOM;
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     public int getGenre() {
