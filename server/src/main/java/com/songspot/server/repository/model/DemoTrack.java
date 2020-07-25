@@ -26,10 +26,6 @@ public class DemoTrack extends AuditModel {
     @Column(name = "artist", nullable = false, updatable = true)
     private String artist;
 
-    @Column(name = "curators")
-    @ElementCollection(targetClass = String.class)
-    private Set<String> curators = new HashSet<>();
-
     @Lob
     private byte[] data;
 
@@ -71,14 +67,6 @@ public class DemoTrack extends AuditModel {
 
     public void setArtist(String artist) {
         this.artist = artist;
-    }
-
-    public Set<String> getCurators() {
-        return curators;
-    }
-
-    public void setCurators(Set<String> curators) {
-        this.curators = curators;
     }
 
     public com.songspot.server.controller.model.DemoTrack toPresentationModel() {

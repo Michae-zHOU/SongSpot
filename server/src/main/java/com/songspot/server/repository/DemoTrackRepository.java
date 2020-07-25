@@ -11,7 +11,4 @@ public interface DemoTrackRepository extends JpaRepository<DemoTrack, Long> {
     Optional<DemoTrack> findById(Long id);
 
     List<DemoTrack> findAllByArtist(String artist);
-
-    @Query(value = "from DemoTrack as demo_track where ?1 in user.curators")
-    List<DemoTrack> findAllByCurator(String curator);
 }
