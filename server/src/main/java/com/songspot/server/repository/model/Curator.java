@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "curators")
+@Table(name = "curators", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) })
 public class Curator extends UserModel {
 
     @Id

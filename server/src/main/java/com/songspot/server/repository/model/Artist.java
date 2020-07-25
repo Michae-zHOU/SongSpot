@@ -3,7 +3,7 @@ package com.songspot.server.repository.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "artists")
+@Table(name = "artists", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) })
 public class Artist extends UserModel {
     @Id
     @GeneratedValue(generator = "artist_generator")
