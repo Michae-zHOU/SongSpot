@@ -1,8 +1,6 @@
 package com.songspot.server.repository.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "demo_track_curator")
@@ -19,22 +17,22 @@ public class DemoTrackCurator {
     @ManyToOne
     @MapsId("curator_id")
     @JoinColumn(name = "curator_id")
-    private  Curator curator;
+    private Curator curator;
 
     private boolean viewed;
 
     public DemoTrackCurator() {
     }
 
-    public DemoTrackCurator(DemoTrackCuratorKey id, DemoTrack demoTrack, Curator curator) {
-        this.id = id;
+    public DemoTrackCurator(Long demoTrackId, Long curatorId, DemoTrack demoTrack, Curator curator) {
+        this.id = new DemoTrackCuratorKey(demoTrackId, curatorId);
         this.demoTrack = demoTrack;
         this.curator = curator;
         this.viewed = false;
     }
 
-    public DemoTrackCurator(DemoTrackCuratorKey id, DemoTrack demoTrack, Curator curator, boolean viewed) {
-        this.id = id;
+    public DemoTrackCurator(Long demoTrackId, Long curatorId, DemoTrack demoTrack, Curator curator, boolean viewed) {
+        this.id = new DemoTrackCuratorKey(demoTrackId, curatorId);
         this.demoTrack = demoTrack;
         this.curator = curator;
         this.viewed = viewed;
@@ -46,6 +44,10 @@ public class DemoTrackCurator {
 
     public void setId(DemoTrackCuratorKey id) {
         this.id = id;
+    }
+
+    public void setId(Long demoTrackId, Long curatorId) {
+        this.id = new DemoTrackCuratorKey(demoTrackId, curatorId);
     }
 
     public DemoTrack getDemoTrack() {
