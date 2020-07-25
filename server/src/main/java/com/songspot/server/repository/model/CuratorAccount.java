@@ -1,7 +1,6 @@
 package com.songspot.server.repository.model;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "curator_accounts")
