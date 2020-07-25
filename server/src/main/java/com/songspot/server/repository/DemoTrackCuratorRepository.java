@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface DemoTrackCuratorRepository extends JpaRepository<DemoTrackCurator, DemoTrackCuratorKey> {
 
+    List<DemoTrackCurator> findAllByCuratorId(Long curator);
+
     List<DemoTrackCurator> findAllByCuratorIdAndViewed(Long curator, Boolean viewed);
 
     List<DemoTrackCurator> findAllByDemoTrackId(Long demoTrackId);

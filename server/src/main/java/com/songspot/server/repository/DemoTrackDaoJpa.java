@@ -12,10 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class DemoTrackDaoJpa {
@@ -47,6 +45,10 @@ public class DemoTrackDaoJpa {
     public com.songspot.server.controller.model.DemoTrack submit(String requester, Long trackId, String curatorName) {
         DemoTrack demoTrack = this.demoTrackRepository.findById(trackId)
                 .orElseThrow(() -> new ResourceNotFoundException("Track by " + trackId + " not found"));
+
+        /*if(!requester.equals(demoTrack.getArtist())) {
+            throw new IllegalStateException("Requester is not artist");
+        }*/
         Curator curator = this.curatorRepository.findByName(curatorName)
                 .orElseThrow(() -> new ResourceNotFoundException("Curator with name " + curatorName + " not found"));
 
@@ -64,9 +66,39 @@ public class DemoTrackDaoJpa {
         return demoTrack.toPresentationModel();
     }
 
-    public List<com.songspot.server.controller.model.DemoTrack> getTracks(String requester) {
-        // TODO
-        return Collections.emptyList();
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public List<com.songspot.server.controller.model.DemoTrack> getDemoTrackOfCurator(String curatorName) {
+        Curator curator = this.curatorRepository.findByName(curatorName)
+                .orElseThrow(() -> new ResourceNotFoundException("Curator with name " + curatorName + " not found"));
+        List<Long> demoTrackIds = this.demoTrackCuratorRepository
+                .findAllByCuratorId(curator.getId()).stream().map(t -> t.getDemoTrack().getId())
+                .collect(Collectors.toList());
+
+        return this.demoTrackRepository.findAllById(demoTrackIds)
+                .stream().map(DemoTrack::toPresentationModel).collect(Collectors.toList());
     }
 
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public List<com.songspot.server.controller.model.DemoTrack> getUnViewedDemoTrackOfCurator(String curatorName) {
+        Curator curator = this.curatorRepository.findByName(curatorName)
+                .orElseThrow(() -> new ResourceNotFoundException("Curator with name " + curatorName + " not found"));
+        List<Long> demoTrackIds = this.demoTrackCuratorRepository
+                .findAllByCuratorIdAndViewed(curator.getId(), false).stream().map(t -> t.getDemoTrack().getId())
+                .collect(Collectors.toList());
+
+        return this.demoTrackRepository.findAllById(demoTrackIds)
+                .stream().map(DemoTrack::toPresentationModel).collect(Collectors.toList());
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public List<com.songspot.server.controller.model.DemoTrack> getViewedDemoTrackOfCurator(String curatorName) {
+        Curator curator = this.curatorRepository.findByName(curatorName)
+                .orElseThrow(() -> new ResourceNotFoundException("Curator with name " + curatorName + " not found"));
+        List<Long> demoTrackIds = this.demoTrackCuratorRepository
+                .findAllByCuratorIdAndViewed(curator.getId(), true).stream().map(t -> t.getDemoTrack().getId())
+                .collect(Collectors.toList());
+
+        return this.demoTrackRepository.findAllById(demoTrackIds)
+                .stream().map(DemoTrack::toPresentationModel).collect(Collectors.toList());
+    }
 }
