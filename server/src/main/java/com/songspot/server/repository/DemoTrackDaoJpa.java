@@ -2,6 +2,7 @@ package com.songspot.server.repository;
 
 import com.songspot.server.controller.model.CreateDemoTrack;
 import com.songspot.server.exception.ResourceNotFoundException;
+import com.songspot.server.repository.model.Artist;
 import com.songspot.server.repository.model.Curator;
 import com.songspot.server.repository.model.DemoTrack;
 import com.songspot.server.repository.model.DemoTrackCurator;
@@ -23,6 +24,9 @@ public class DemoTrackDaoJpa {
 
     @Autowired
     private DemoTrackCuratorRepository demoTrackCuratorRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
 
     @Autowired
     private CuratorRepository curatorRepository;
@@ -64,6 +68,15 @@ public class DemoTrackDaoJpa {
         this.demoTrackCuratorRepository.save(demoTrackCurator);
 
         return demoTrack.toPresentationModel();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public List<com.songspot.server.controller.model.DemoTrack> getDemoTrackOfArtist(String artistName) {
+        Artist artist = this.artistRepository.findByName(artistName)
+                .orElseThrow(() -> new ResourceNotFoundException("Artist with name " + artistName + " not found"));
+
+        return this.demoTrackRepository.findAllByArtist(artistName)
+                .stream().map(DemoTrack::toPresentationModel).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
