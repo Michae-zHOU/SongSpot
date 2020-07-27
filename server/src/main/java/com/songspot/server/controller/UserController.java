@@ -15,9 +15,9 @@ import javax.validation.Valid;
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    protected static final String LOGIN_ROUTE = "/login";
-    protected static final String LOGOUT_ROUTE = "/logout";
-    protected static final String REGISTER_ROUTE = "/register";
+    public static final String LOGIN_ROUTE = "/login";
+    public static final String LOGOUT_ROUTE = "/logout";
+    public static final String REGISTER_ROUTE = "/register";
 
     @PostMapping(LOGIN_ROUTE)
     @ResponseStatus(HttpStatus.OK)
