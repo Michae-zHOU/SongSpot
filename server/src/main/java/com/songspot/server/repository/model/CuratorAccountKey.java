@@ -3,10 +3,11 @@ package com.songspot.server.repository.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class CuratorAccountKey {
+public class CuratorAccountKey implements Serializable {
 
     @NotNull
     @Column(name = "curator_id")

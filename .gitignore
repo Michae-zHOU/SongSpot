@@ -9,3 +9,5 @@ node_modules
 server/build
 server/.gradle
 server/.idea
+server/.settings/*
+server/bin/*
