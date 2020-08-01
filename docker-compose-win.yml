@@ -1,15 +1,14 @@
-version: '2.1'
+version: '3.8'
 services:
-
   client:
     image: wecanwalk/songspot-client:latest
     container_name: react_app
     ports:
       - "3000:3000"
     depends_on:
-      - controller
+      - server
 
-  controller:
+  server:
     image: wecanwalk/songspot-server:latest
     container_name: springboot_app
     ports:
@@ -41,4 +40,5 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
-      timeout: 5s      retries: 5
+      timeout: 5s      
+      retries: 5
