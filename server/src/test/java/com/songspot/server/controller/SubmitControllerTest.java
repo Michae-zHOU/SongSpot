@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,10 +28,23 @@ public class SubmitControllerTest {
     private static final String USER = "AZ";
     private static final String CURATOR = "Sai";
     private static final String ROOT_URL = "http://localhost:";
-
+    private final TestRestTemplate restTemplate = new TestRestTemplate();
     @LocalServerPort
     int randomServerPort;
-    private final TestRestTemplate restTemplate = new TestRestTemplate();
+
+    public static <T> HttpEntity actAsOtherUser(T body, String username, String... eTags) {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set(username, username);
+
+        if (eTags.length > 0)
+            headers.setIfNoneMatch(eTags[0]);
+
+        if (body == null) {
+            return new HttpEntity<>(headers);
+        }
+
+        return new HttpEntity<>(body, headers);
+    }
 
     @Before
     public void setup() {
@@ -63,7 +74,7 @@ public class SubmitControllerTest {
     }
 
     public Long createTrack() {
-        byte[] testData = new byte[]{0,0,0,0};
+        byte[] testData = new byte[]{0, 0, 0, 0};
         CreateDemoTrack params = new CreateDemoTrack("Trance.mp3", "mp3", null, testData, USER);
 
         ResponseEntity<DemoTrack> response = this.restTemplate.exchange(
@@ -86,20 +97,5 @@ public class SubmitControllerTest {
         assertEquals("mp3", track.getFileType());
 
         return track.getId();
-    }
-
-
-    public static <T> HttpEntity actAsOtherUser(T body, String username, String... eTags) {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.set(username, username);
-
-        if (eTags.length > 0)
-            headers.setIfNoneMatch(eTags[0]);
-
-        if (body == null) {
-            return new HttpEntity<>(headers);
-        }
-
-        return new HttpEntity<>(body, headers);
     }
 }
