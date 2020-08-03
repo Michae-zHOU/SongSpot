@@ -1,6 +1,7 @@
 package com.songspot.server.repository.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "curator_accounts")
@@ -68,5 +69,21 @@ public class CuratorAccount {
 
     public void setValidated(boolean validated) {
         this.validated = validated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CuratorAccount)) return false;
+        CuratorAccount that = (CuratorAccount) o;
+        return isValidated() == that.isValidated() &&
+                Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCurator(), that.getCurator()) &&
+                Objects.equals(getAccount(), that.getAccount());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCurator(), getAccount(), isValidated());
     }
 }

@@ -24,7 +24,7 @@ public class SubmitController {
         return trackDaoJpa.createDemoTrack(null, createDemoTrack);
     }
 
-    @PutMapping(SUBMIT_TRACK_ROUTE)
+    @PostMapping(SUBMIT_TRACK_ROUTE)
     @ResponseStatus(HttpStatus.OK)
     public DemoTrack submitTrackToCurator(@Valid @PathVariable Long trackId, @Valid @PathVariable String curator) {
         return trackDaoJpa.submit(null, trackId, curator);

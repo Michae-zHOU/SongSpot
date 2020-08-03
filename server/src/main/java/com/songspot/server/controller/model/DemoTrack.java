@@ -3,7 +3,6 @@ package com.songspot.server.controller.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DemoTrack {
 
     @Expose

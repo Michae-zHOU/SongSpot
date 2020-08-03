@@ -8,10 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -52,7 +49,7 @@ public class SubmitControllerTest {
     }
 
     @Test
-    public void testSubController() {
+    public void testSubmitController() {
         Long trackId = createTrack();
 
         submitTrackToCurator(trackId);
@@ -60,13 +57,14 @@ public class SubmitControllerTest {
 
     public void submitTrackToCurator(Long trackId) {
         ResponseEntity<DemoTrack> response = this.restTemplate.exchange(
-                ROOT_URL + randomServerPort + SubmitController.CREATE_TRACK_ROUTE,
+                ROOT_URL + randomServerPort + SubmitController.SUBMIT_TRACK_ROUTE,
                 HttpMethod.POST,
                 null,
                 DemoTrack.class,
                 trackId,
                 CURATOR);
 
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         DemoTrack track = response.getBody();
 
         assertNotNull(track);
