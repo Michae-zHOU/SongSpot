@@ -12,7 +12,7 @@ public class User {
 
     private String username;
 
-    private Byte[] avatar;
+    private byte[] avatar;
 
     private UserType userType;
 
@@ -39,11 +39,11 @@ public class User {
         this.username = username;
     }
 
-    public Byte[] getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Byte[] avatar) {
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 

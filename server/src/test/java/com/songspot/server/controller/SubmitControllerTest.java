@@ -1,7 +1,6 @@
 package com.songspot.server.controller;
 
-import com.songspot.server.controller.model.CreateDemoTrack;
-import com.songspot.server.controller.model.DemoTrack;
+import com.songspot.server.controller.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +11,7 @@ import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -50,9 +50,38 @@ public class SubmitControllerTest {
 
     @Test
     public void testSubmitController() {
+        createCurator();
+
         Long trackId = createTrack();
 
         submitTrackToCurator(trackId);
+    }
+
+    public void createCurator() {
+        byte[] avatar = new byte[]{0, 0, 0, 0};
+        UserRegisterParam params = new UserRegisterParam(CURATOR,
+                "12345678",
+                "sai@gmail.com",
+                UserType.CURATOR,
+                "TikToker",
+                "www.saige.com",
+                avatar);
+
+        ResponseEntity<User> response = this.restTemplate.exchange(
+                ROOT_URL + randomServerPort + UserController.REGISTER_ROUTE,
+                HttpMethod.POST,
+                new HttpEntity<>(params),
+                User.class);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        User user = response.getBody();
+        assertNotNull(user);
+        assertEquals(params.getUsername(), user.getUsername());
+        byte[] returnAvatar = user.getAvatar();
+        for(int idx = 0; idx < returnAvatar.length; idx++) {
+            assertEquals(avatar[idx], returnAvatar[idx]);
+        }
+        assertEquals(UserType.CURATOR, user.getUserType());
     }
 
     public void submitTrackToCurator(Long trackId) {
@@ -81,16 +110,15 @@ public class SubmitControllerTest {
                 actAsOtherUser(params, USER),
                 DemoTrack.class);
 
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         DemoTrack track = response.getBody();
 
         assertNotNull(track);
-
         assertNotNull(track.getFilename());
         assertEquals("Trance.mp3", track.getFilename());
 
         assertNotNull(track.getArtist());
         assertEquals(USER, track.getArtist());
-
         assertNotNull(track.getFileType());
         assertEquals("mp3", track.getFileType());
 

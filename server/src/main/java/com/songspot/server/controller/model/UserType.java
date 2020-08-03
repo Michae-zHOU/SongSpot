@@ -32,7 +32,7 @@ public enum UserType {
         };
     }
 
-    public int getUserType() {
+    public int getUserTypeValue() {
         return this.value;
     }
 }

@@ -1,6 +1,7 @@
 package com.songspot.server.controller.model;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class UserRegisterParam {
@@ -17,23 +18,28 @@ public class UserRegisterParam {
     @Size(min = 1, max = 100)
     private String email;
 
+    @NotNull
+    private UserType userType;
+
     private String description;
 
     @Size(min = 1, max = 100)
     private String website;
 
-    private Byte[] avatar;
+    private byte[] avatar;
 
     public UserRegisterParam(@NotBlank @Size(min = 1, max = 100) String username,
                              @NotBlank @Size(min = 1, max = 100) String password,
                              @NotBlank @Size(min = 1, max = 100) String email,
+                             @NotNull UserType userType,
                              String description,
                              String website,
-                             Byte[] avatar) {
+                             byte[] avatar) {
         this.username = username;
         this.password = password;
-        this.description = description;
+        this.userType = userType;
         this.email = email;
+        this.description = description;
         this.website = website;
         this.avatar = avatar;
     }
@@ -54,20 +60,28 @@ public class UserRegisterParam {
         this.password = password;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getWebsite() {
@@ -78,11 +92,11 @@ public class UserRegisterParam {
         this.website = website;
     }
 
-    public Byte[] getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Byte[] avatar) {
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 }
