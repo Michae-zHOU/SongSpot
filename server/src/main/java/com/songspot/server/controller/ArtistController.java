@@ -3,6 +3,7 @@ package com.songspot.server.controller;
 import com.songspot.server.client.UserClient;
 import com.songspot.server.controller.model.CreateDemoTrack;
 import com.songspot.server.controller.model.DemoTrack;
+import com.songspot.server.controller.model.User;
 import com.songspot.server.repository.DemoTrackDaoJpa;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class ArtistController {
 
     protected static final String ARTIST_CREATE_TRACK_ROUTE = "/artist/create";
     protected static final String ARTIST_VIEW_TRACKS_ROUTE = "/artist/view/tracks";
+    protected static final String ARTIST_VIEW_CURATORS_ROUTE = "/artist/view/curators";
 
     @Autowired
     private DemoTrackDaoJpa trackDaoJpa;
