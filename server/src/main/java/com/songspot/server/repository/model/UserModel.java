@@ -4,10 +4,12 @@ import com.songspot.server.controller.model.User;
 import com.songspot.server.controller.model.UserType;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 
+@MappedSuperclass
 public abstract class UserModel extends NamedModel {
 
     @NotBlank

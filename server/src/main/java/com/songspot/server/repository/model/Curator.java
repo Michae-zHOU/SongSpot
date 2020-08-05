@@ -1,10 +1,6 @@
 package com.songspot.server.repository.model;
 
-import com.songspot.server.controller.model.User;
-import com.songspot.server.controller.model.UserType;
-
 import javax.persistence.*;
-import java.util.ArrayList;
 
 @Entity
 @Table(name = "curators", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})

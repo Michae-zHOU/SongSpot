@@ -30,7 +30,7 @@ public class CuratorDaoJpa {
         curator.setCreatedAt(Timestamp.from(Instant.now()));
         curator.setUpdatedAt(Timestamp.from(Instant.now()));
 
-        curatorRepository.save(curator);
+        this.curatorRepository.save(curator);
         return curator.toUserPresentational();
     }
 }
