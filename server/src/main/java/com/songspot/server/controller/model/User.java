@@ -1,6 +1,5 @@
 package com.songspot.server.controller.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
 import java.util.List;

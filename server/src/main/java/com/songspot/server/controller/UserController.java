@@ -3,23 +3,24 @@ package com.songspot.server.controller;
 import com.songspot.server.controller.model.*;
 import com.songspot.server.repository.ArtistDaoJpa;
 import com.songspot.server.repository.CuratorDaoJpa;
-import com.songspot.server.repository.CuratorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
 public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     public static final String LOGIN_ROUTE = "/login";
     public static final String LOGOUT_ROUTE = "/logout";
     public static final String REGISTER_ROUTE = "/register";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private CuratorDaoJpa curatorDaoJpa;
 

@@ -3,7 +3,6 @@ package com.songspot.server.controller;
 import com.songspot.server.client.UserClient;
 import com.songspot.server.controller.model.CreateDemoTrack;
 import com.songspot.server.controller.model.DemoTrack;
-import com.songspot.server.controller.model.User;
 import com.songspot.server.repository.DemoTrackDaoJpa;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;

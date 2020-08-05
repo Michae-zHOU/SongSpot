@@ -1,6 +1,5 @@
 package com.songspot.server.controller.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
 import java.util.Objects;
@@ -16,7 +15,8 @@ public class DemoTrack {
 
     String artist;
 
-    public DemoTrack() {}
+    public DemoTrack() {
+    }
 
     public DemoTrack(Long id, String filename, String fileType, String artist) {
         this.id = id;

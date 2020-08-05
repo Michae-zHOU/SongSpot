@@ -1,8 +1,6 @@
 package com.songspot.server.repository.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "demo_track")

@@ -3,7 +3,7 @@ package com.songspot.server.repository.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="account")
+@Table(name = "account")
 public class AccountModel {
     @Id
     @GeneratedValue(generator = "account_generator")
