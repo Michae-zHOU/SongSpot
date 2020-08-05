@@ -3,6 +3,8 @@ package com.songspot.server.controller.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
+import java.util.Objects;
+
 public class DemoTrack {
 
     @Expose
@@ -53,5 +55,21 @@ public class DemoTrack {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DemoTrack)) return false;
+        DemoTrack demoTrack = (DemoTrack) o;
+        return Objects.equals(getId(), demoTrack.getId()) &&
+                Objects.equals(getFilename(), demoTrack.getFilename()) &&
+                Objects.equals(getFileType(), demoTrack.getFileType()) &&
+                Objects.equals(getArtist(), demoTrack.getArtist());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getFilename(), getFileType(), getArtist());
     }
 }

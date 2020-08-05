@@ -27,6 +27,8 @@ public class ArtistDaoJpa {
         artist.setUserType(userRegisterParam.getUserType().getUserTypeValue());
         artist.setBios(userRegisterParam.getDescription());
         artist.setWebsite(userRegisterParam.getWebsite());
+        artist.setFollowsCount(0L);
+        artist.setSongsCount(0L);
         artist.setCreatedAt(Timestamp.from(Instant.now()));
         artist.setUpdatedAt(Timestamp.from(Instant.now()));
 
