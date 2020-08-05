@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 public class ArtistControllerTest {
 
     private static final String ARTIST = "NIU";
-    private static final String CURATOR = "Sai";
+    private static final String CURATOR = "MZ";
     private static final String ROOT_URL = "http://localhost:";
     private final TestRestTemplate restTemplate = new TestRestTemplate();
     @LocalServerPort
@@ -118,10 +118,10 @@ public class ArtistControllerTest {
         byte[] avatar = new byte[]{0, 0, 0, 0};
         UserRegisterParam params = new UserRegisterParam(CURATOR,
                 "12345678",
-                "sai@gmail.com",
+                "mz@gmail.com",
                 UserType.CURATOR,
-                "TikToker",
-                "www.saige.com",
+                "WeChater",
+                "www.mz.com",
                 avatar);
 
         ResponseEntity<User> response = this.restTemplate.exchange(
