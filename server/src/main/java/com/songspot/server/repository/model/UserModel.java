@@ -8,6 +8,7 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @MappedSuperclass
 public abstract class UserModel extends NamedModel {
@@ -84,6 +85,9 @@ public abstract class UserModel extends NamedModel {
 
     private byte[] getAvatarNonPrimitive() {
         Byte[] avatar = this.getAvatar();
+        if(Objects.isNull(avatar))
+            return null;
+
         byte[] byteObject = new byte[avatar.length];
         for (int idx = 0; idx < avatar.length; idx++) {
             byteObject[idx] = avatar[idx];
@@ -91,10 +95,13 @@ public abstract class UserModel extends NamedModel {
         return byteObject;
     }
 
-    public void setAvatarNonPrimitive(byte[] avatorNonPrimitive) {
-        Byte[] avatar = new Byte[avatorNonPrimitive.length];
-        for (int idx = 0; idx < avatorNonPrimitive.length; idx++) {
-            avatar[idx] = avatorNonPrimitive[idx];
+    public void setAvatarNonPrimitive(byte[] avatarNonPrimitive) {
+        if(Objects.isNull(avatarNonPrimitive))
+            return;
+
+        Byte[] avatar = new Byte[avatarNonPrimitive.length];
+        for (int idx = 0; idx < avatarNonPrimitive.length; idx++) {
+            avatar[idx] = avatarNonPrimitive[idx];
         }
         this.setAvatar(avatar);
     }
