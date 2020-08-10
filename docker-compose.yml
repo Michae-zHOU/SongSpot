@@ -17,7 +17,7 @@ services:
     environment:
       spring_profiles_active: dev
     volumes:
-      - $HOME/docker/volumes/log:/d/var/log
+      - $HOME/docker/volumes/log:/var/log
 
   cache:
     image: redis
