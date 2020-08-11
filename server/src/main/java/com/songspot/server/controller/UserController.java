@@ -21,7 +21,6 @@ public class UserController {
     public static final String LOGOUT_ROUTE = "/logout";
     public static final String REGISTER_ROUTE = "/register";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
     @Autowired
     private CuratorDaoJpa curatorDaoJpa;
 
@@ -30,7 +29,7 @@ public class UserController {
 
 
     @PostMapping(LOGIN_ROUTE)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.FOUND)
     public User userLogin(@Valid @RequestBody UserLoginParam userLoginParam) {
         UserType userType = userLoginParam.getUserType();
 
