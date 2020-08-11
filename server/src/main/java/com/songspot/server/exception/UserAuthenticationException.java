@@ -3,13 +3,13 @@ package com.songspot.server.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-public class ResourceDuplicatedException extends RuntimeException {
-    public ResourceDuplicatedException(String message) {
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class UserAuthenticationException extends RuntimeException {
+    public UserAuthenticationException(String message) {
         super(message);
     }
 
-    public ResourceDuplicatedException(String message, Throwable cause) {
+    public UserAuthenticationException(String message, Throwable cause) {
         super(message, cause);
     }
 }
