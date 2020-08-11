@@ -49,7 +49,7 @@ public class UserController {
         return switch (newUserType) {
             case CURATOR -> this.curatorDaoJpa.createCurator(userRegisterParam);
             case ARTIST -> this.artistDaoJpa.createArtist(userRegisterParam);
-            default -> throw new IllegalArgumentException("New user registeration failed. Unknown user type.");
+            default -> throw new IllegalArgumentException("New user registration failed. Unknown user type.");
         };
     }
 
