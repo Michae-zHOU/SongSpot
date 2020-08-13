@@ -52,7 +52,7 @@ public class CuratorDaoJpa {
         Curator curator = this.curatorRepository.findByName(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Username by " + username + " is not found"));
 
-        if (!this.authenticationService.matches(userLoginParam.getPassword(), curator.getPassword()))
+        if (this.authenticationService.notMatches(userLoginParam.getPassword(), curator.getPassword()))
             throw new UserAuthenticationException("User " + username + " failed to log in");
 
         return curator.toUserPresentational();

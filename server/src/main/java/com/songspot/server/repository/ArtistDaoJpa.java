@@ -55,8 +55,9 @@ public class ArtistDaoJpa {
         Artist artist = this.artistRepository.findByName(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Username by " + username + " is not found"));
 
-        if (!this.authenticationService.matches(userLoginParam.getPassword(), artist.getPassword()))
+        if (this.authenticationService.notMatches(userLoginParam.getPassword(), artist.getPassword()))
             throw new UserAuthenticationException("User " + username + " failed to log in");
+
         return artist.toUserPresentational();
     }
 }
