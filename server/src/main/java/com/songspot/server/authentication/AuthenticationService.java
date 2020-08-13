@@ -21,14 +21,17 @@ public class AuthenticationService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
+    private SecretService secretService;
+
+    @Autowired
     private JwtConfig jwtConfig;
 
     public String encode(String password) {
         return bCryptPasswordEncoder.encode(password);
     }
 
-    public boolean matches(String password, String expected) {
-        return this.bCryptPasswordEncoder.matches(password, expected);
+    public boolean notMatches(String password, String expected) {
+        return !this.bCryptPasswordEncoder.matches(password, expected);
     }
 
     /**
@@ -40,12 +43,16 @@ public class AuthenticationService {
      */
     public User parseToken(String token) {
         try {
-            Claims body = Jwts.parserBuilder().setSigningKey(jwtConfig.getSecret()).build().parseClaimsJws(token)
+            String secret = secretService.getSecretOf(SignatureAlgorithm.HS256);
+            Claims body = Jwts.parserBuilder()
+                    .setSigningKey(secret)
+                    .build()
+                    .parseClaimsJws(token)
                     .getBody();
             User user = new User();
             user.setUsername(body.getSubject());
             user.setId(Long.parseLong((String) body.get("userId")));
-            user.setUserType(UserType.valueOf((String) body.get("userType")));
+            user.setUserType(UserType.getType((String) body.get("userType")));
 
             return user;
 
@@ -64,12 +71,13 @@ public class AuthenticationService {
     public String generateToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("userId", user.getId().toString());
-        claims.put("userType", user.getUserType());
+        claims.put("userType", user.getUserType().toString());
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        String secret = secretService.getSecretOf(SignatureAlgorithm.HS256);
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(jwtConfig.getSecret())
+                .setSubject(secret)
                 .signWith(key)
                 .compact();
     }
