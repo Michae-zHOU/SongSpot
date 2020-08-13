@@ -16,23 +16,23 @@ public class CuratorAccount {
     private Curator curator;
 
     @OneToOne
-    @MapsId("account_id")
-    @JoinColumn(name = "account_id")
-    private AccountModel account;
+    @MapsId("linked_account_id")
+    @JoinColumn(name = "linked_account_id")
+    private LinkedAccount account;
 
     private boolean validated;
 
     public CuratorAccount() {
     }
 
-    public CuratorAccount(CuratorAccountKey id, Curator curator, AccountModel account) {
+    public CuratorAccount(CuratorAccountKey id, Curator curator, LinkedAccount account) {
         this.id = id;
         this.curator = curator;
         this.account = account;
         this.validated = false;
     }
 
-    public CuratorAccount(CuratorAccountKey id, Curator curator, AccountModel account, boolean validated) {
+    public CuratorAccount(CuratorAccountKey id, Curator curator, LinkedAccount account, boolean validated) {
         this.id = id;
         this.curator = curator;
         this.account = account;
@@ -55,11 +55,11 @@ public class CuratorAccount {
         this.curator = curator;
     }
 
-    public AccountModel getAccount() {
+    public LinkedAccount getAccount() {
         return account;
     }
 
-    public void setAccount(AccountModel account) {
+    public void setAccount(LinkedAccount account) {
         this.account = account;
     }
 

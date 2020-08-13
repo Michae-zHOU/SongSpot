@@ -3,8 +3,8 @@ package com.songspot.server.repository.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "account")
-public class AccountModel {
+@Table(name = "linked_account")
+public class LinkedAccount {
     @Id
     @GeneratedValue(generator = "account_generator")
     @SequenceGenerator(
