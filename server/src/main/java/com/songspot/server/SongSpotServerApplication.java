@@ -11,9 +11,4 @@ public class SongSpotServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(SongSpotServerApplication.class, args);
     }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class CuratorDaoJpa {
@@ -28,7 +29,8 @@ public class CuratorDaoJpa {
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public com.songspot.server.controller.model.User createCurator(UserRegisterParam userRegisterParam) {
         String username = userRegisterParam.getUsername();
-        if (!Objects.isNull(this.curatorRepository.findByName(username)))
+        Optional<Curator> existed = this.curatorRepository.findByName(username);
+        if (existed.isPresent())
             throw new ResourceDuplicatedException("Username by " + username + " is duplicated");
 
         Curator curator = new Curator();

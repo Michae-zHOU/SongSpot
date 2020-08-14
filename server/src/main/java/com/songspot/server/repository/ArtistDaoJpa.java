@@ -7,6 +7,7 @@ import com.songspot.server.exception.ResourceDuplicatedException;
 import com.songspot.server.exception.ResourceNotFoundException;
 import com.songspot.server.exception.UserAuthenticationException;
 import com.songspot.server.repository.model.Artist;
+import com.songspot.server.repository.model.Curator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ArtistDaoJpa {
@@ -28,7 +30,8 @@ public class ArtistDaoJpa {
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public com.songspot.server.controller.model.User createArtist(UserRegisterParam userRegisterParam) {
         String username = userRegisterParam.getUsername();
-        if (!Objects.isNull(this.artistRepository.findByName(username)))
+        Optional<Artist> existed = this.artistRepository.findByName(username);
+        if (existed.isPresent())
             throw new ResourceDuplicatedException("Username by " + username + " is duplicated");
 
         Artist artist = new Artist();
