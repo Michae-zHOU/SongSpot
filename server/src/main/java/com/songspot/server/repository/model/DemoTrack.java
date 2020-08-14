@@ -3,7 +3,7 @@ package com.songspot.server.repository.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "demo_track")
+@Table(name = "demo_tracks")
 public class DemoTrack extends AuditModel {
 
     @Id

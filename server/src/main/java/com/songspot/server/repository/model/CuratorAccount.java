@@ -18,24 +18,24 @@ public class CuratorAccount {
     @OneToOne
     @MapsId("linked_account_id")
     @JoinColumn(name = "linked_account_id")
-    private LinkedAccount account;
+    private LinkedAccount linkedAccount;
 
     private boolean validated;
 
     public CuratorAccount() {
     }
 
-    public CuratorAccount(CuratorAccountKey id, Curator curator, LinkedAccount account) {
+    public CuratorAccount(CuratorAccountKey id, Curator curator, LinkedAccount linkedAccount) {
         this.id = id;
         this.curator = curator;
-        this.account = account;
+        this.linkedAccount = linkedAccount;
         this.validated = false;
     }
 
     public CuratorAccount(CuratorAccountKey id, Curator curator, LinkedAccount account, boolean validated) {
         this.id = id;
         this.curator = curator;
-        this.account = account;
+        this.linkedAccount = account;
         this.validated = validated;
     }
 
@@ -55,12 +55,12 @@ public class CuratorAccount {
         this.curator = curator;
     }
 
-    public LinkedAccount getAccount() {
-        return account;
+    public LinkedAccount getLinkedAccount() {
+        return linkedAccount;
     }
 
-    public void setAccount(LinkedAccount account) {
-        this.account = account;
+    public void setLinkedAccount(LinkedAccount linkedAccount) {
+        this.linkedAccount = linkedAccount;
     }
 
     public boolean isValidated() {
@@ -79,11 +79,11 @@ public class CuratorAccount {
         return isValidated() == that.isValidated() &&
                 Objects.equals(getId(), that.getId()) &&
                 Objects.equals(getCurator(), that.getCurator()) &&
-                Objects.equals(getAccount(), that.getAccount());
+                Objects.equals(getLinkedAccount(), that.getLinkedAccount());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCurator(), getAccount(), isValidated());
+        return Objects.hash(getId(), getCurator(), getLinkedAccount(), isValidated());
     }
 }
