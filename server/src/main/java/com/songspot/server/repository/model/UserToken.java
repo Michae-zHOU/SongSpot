@@ -1,6 +1,7 @@
 package com.songspot.server.repository.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user_tokens")
@@ -65,5 +66,19 @@ public class UserToken extends AuditModel {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public com.songspot.server.redis.model.UserToken toCacheModel() {
+        if (Objects.isNull(this.getUserId()) || Objects.isNull(this.getUserType()))
+            throw new IllegalArgumentException("Token index is invalid");
+
+        String index = this.getUserId() + "@" + this.getUserType();
+        String token = this.getToken();
+
+        if (Objects.isNull(token)) {
+            throw new IllegalStateException("Token is null in UserToken");
+        }
+
+        return new com.songspot.server.redis.model.UserToken(index, token);
     }
 }
