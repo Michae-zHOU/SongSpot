@@ -85,7 +85,7 @@ public abstract class UserModel extends NamedModel {
 
     private byte[] getAvatarNonPrimitive() {
         Byte[] avatar = this.getAvatar();
-        if(Objects.isNull(avatar))
+        if (Objects.isNull(avatar))
             return null;
 
         byte[] byteObject = new byte[avatar.length];
@@ -96,7 +96,7 @@ public abstract class UserModel extends NamedModel {
     }
 
     public void setAvatarNonPrimitive(byte[] avatarNonPrimitive) {
-        if(Objects.isNull(avatarNonPrimitive))
+        if (Objects.isNull(avatarNonPrimitive))
             return;
 
         Byte[] avatar = new Byte[avatarNonPrimitive.length];
