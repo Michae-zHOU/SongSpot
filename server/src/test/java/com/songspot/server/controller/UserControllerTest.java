@@ -28,6 +28,8 @@ import static org.junit.Assert.assertNotNull;
 public class UserControllerTest {
 
     private static final String USER = "UserController_User";
+    private static final String ARTIST = "UserController_ARTIST";
+    private static final String ARTIST_PASSWORD = "UserController_Artist_Password";
     private static final String CURATOR = "UserController_Curator";
     private static final String CURATOR_PASSWORD = "UserController_Curator_Password";
     private static final String ROOT_URL = "http://localhost:";
@@ -42,28 +44,17 @@ public class UserControllerTest {
 
     @Test
     public void testUserController() {
-        Long registerUserId = createCurator();
+        Long registerCuratorId = createCurator();
 
-        Long loginUserId = LoginCurator();
+        Long loginCuratorId = LoginCurator();
 
-        assertEquals(registerUserId, loginUserId);
-    }
+        assertEquals(registerCuratorId, loginCuratorId);
 
-    public Long LoginCurator() {
-        UserLoginParam params = new UserLoginParam(CURATOR, CURATOR_PASSWORD, UserType.CURATOR);
-        ResponseEntity<User> response = this.restTemplate.exchange(
-                ROOT_URL + randomServerPort + UserController.LOGIN_ROUTE,
-                HttpMethod.POST,
-                new HttpEntity<>(params),
-                User.class);
+        Long registerArtistId = createArtist();
 
-        assertEquals(HttpStatus.FOUND, response.getStatusCode());
-        User user = response.getBody();
-        assertNotNull(user);
-        assertEquals(params.getUsername(), user.getUsername());
-        assertNotNull(user.getToken());
-        assertEquals(UserType.CURATOR, user.getUserType());
-        return user.getId();
+        Long loginArtistId = LoginArtist();
+
+        assertEquals(registerArtistId, loginArtistId);
     }
 
     public Long createCurator() {
@@ -76,6 +67,37 @@ public class UserControllerTest {
                 "www.usercontrollercurator.com",
                 avatar);
 
+        User user = getUser(avatar, params, UserType.CURATOR);
+        return user.getId();
+    }
+
+    public Long createArtist() {
+        byte[] avatar = new byte[]{0, 0, 0, 0};
+        UserRegisterParam params = new UserRegisterParam(ARTIST,
+                ARTIST_PASSWORD,
+                "usercontrollerartist@gmail.com",
+                UserType.ARTIST,
+                "UserController_Artist_Description",
+                "www.usercontrollerartist.com",
+                avatar);
+
+        User user = getUser(avatar, params, UserType.ARTIST);
+        return user.getId();
+    }
+
+    public Long LoginCurator() {
+        UserLoginParam params = new UserLoginParam(CURATOR, CURATOR_PASSWORD, UserType.CURATOR);
+        User user = getUser(params, UserType.CURATOR);
+        return user.getId();
+    }
+
+    public Long LoginArtist() {
+        UserLoginParam params = new UserLoginParam(ARTIST, ARTIST_PASSWORD, UserType.ARTIST);
+        User user = getUser(params, UserType.ARTIST);
+        return user.getId();
+    }
+
+    private User getUser(byte[] avatar, UserRegisterParam params, UserType userType) {
         ResponseEntity<User> response = this.restTemplate.exchange(
                 ROOT_URL + randomServerPort + UserController.REGISTER_ROUTE,
                 HttpMethod.POST,
@@ -90,7 +112,23 @@ public class UserControllerTest {
         for (int idx = 0; idx < returnAvatar.length; idx++) {
             assertEquals(avatar[idx], returnAvatar[idx]);
         }
-        assertEquals(UserType.CURATOR, user.getUserType());
-        return user.getId();
+        assertEquals(userType, user.getUserType());
+        return user;
+    }
+
+    private User getUser(UserLoginParam params, UserType userType) {
+        ResponseEntity<User> response = this.restTemplate.exchange(
+                ROOT_URL + randomServerPort + UserController.LOGIN_ROUTE,
+                HttpMethod.POST,
+                new HttpEntity<>(params),
+                User.class);
+
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        User user = response.getBody();
+        assertNotNull(user);
+        assertEquals(params.getUsername(), user.getUsername());
+        assertNotNull(user.getToken());
+        assertEquals(userType, user.getUserType());
+        return user;
     }
 }
