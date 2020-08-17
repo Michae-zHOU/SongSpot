@@ -3,6 +3,7 @@ package com.songspot.server.authentication;
 import com.songspot.server.configuration.JwtConfig;
 import com.songspot.server.controller.model.User;
 import com.songspot.server.controller.model.UserType;
+import com.songspot.server.repository.model.UserToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Service
 public class AuthenticationService {
@@ -32,6 +35,18 @@ public class AuthenticationService {
 
     public boolean notMatches(String password, String expected) {
         return !this.bCryptPasswordEncoder.matches(password, expected);
+    }
+
+    public UserToken generateUserToken(User user) {
+        String token = generateToken(user);
+        user.setToken(token);
+        UserToken userToken = new UserToken();
+        userToken.setUserId(user.getId());
+        userToken.setUsername(user.getUsername());
+        userToken.setUserType(user.getUserType().getUserTypeValue());
+        userToken.setCreatedAt(Timestamp.from(Instant.now()));
+        userToken.setUpdatedAt(Timestamp.from(Instant.now()));
+        return userToken;
     }
 
     /**
@@ -68,7 +83,7 @@ public class AuthenticationService {
      * @param user the user for which the token will be generated
      * @return the JWT token
      */
-    public String generateToken(User user) {
+    private String generateToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("userId", user.getId().toString());
         claims.put("userType", user.getUserType().toString());

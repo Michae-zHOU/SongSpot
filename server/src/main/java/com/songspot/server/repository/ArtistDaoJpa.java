@@ -1,12 +1,14 @@
 package com.songspot.server.repository;
 
 import com.songspot.server.authentication.AuthenticationService;
+import com.songspot.server.controller.model.User;
 import com.songspot.server.controller.model.UserLoginParam;
 import com.songspot.server.controller.model.UserRegisterParam;
 import com.songspot.server.exception.ResourceDuplicatedException;
 import com.songspot.server.exception.ResourceNotFoundException;
 import com.songspot.server.exception.UserAuthenticationException;
 import com.songspot.server.repository.model.Artist;
+import com.songspot.server.repository.model.UserToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,6 +26,9 @@ public class ArtistDaoJpa {
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private UserTokenRepository userTokenRepository;
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public com.songspot.server.controller.model.User createArtist(UserRegisterParam userRegisterParam) {
@@ -59,6 +64,10 @@ public class ArtistDaoJpa {
         if (this.authenticationService.notMatches(userLoginParam.getPassword(), artist.getPassword()))
             throw new UserAuthenticationException("User " + username + " failed to log in");
 
-        return artist.toUserPresentational();
+        User user = artist.toUserPresentational();
+        UserToken token = authenticationService.generateUserToken(user);
+        this.userTokenRepository.save(token);
+
+        return user;
     }
 }
