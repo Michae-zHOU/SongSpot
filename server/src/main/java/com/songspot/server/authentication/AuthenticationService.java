@@ -52,6 +52,7 @@ public class AuthenticationService {
         userToken.setUserId(user.getId());
         userToken.setUsername(user.getUsername());
         userToken.setUserType(user.getUserType().getUserTypeValue());
+        userToken.setToken(user.getToken());
         userToken.setCreatedAt(Timestamp.from(Instant.now()));
         userToken.setUpdatedAt(Timestamp.from(Instant.now()));
 
