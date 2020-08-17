@@ -16,7 +16,7 @@ public class UserToken extends AuditModel {
     private Long id;
 
     @Column(name = "user_id", nullable = false, updatable = true)
-    private String userId;
+    private Long userId;
 
     @Column(name = "username", nullable = false, updatable = true)
     private String username;
@@ -35,11 +35,11 @@ public class UserToken extends AuditModel {
         this.id = id;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
