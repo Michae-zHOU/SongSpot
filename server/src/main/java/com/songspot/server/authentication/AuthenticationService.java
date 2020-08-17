@@ -3,6 +3,8 @@ package com.songspot.server.authentication;
 import com.songspot.server.configuration.JwtConfig;
 import com.songspot.server.controller.model.User;
 import com.songspot.server.controller.model.UserType;
+import com.songspot.server.redis.RedisUserTokenRepository;
+import com.songspot.server.repository.UserTokenRepository;
 import com.songspot.server.repository.model.UserToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -12,6 +14,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.sql.Timestamp;
@@ -29,6 +33,12 @@ public class AuthenticationService {
     @Autowired
     private JwtConfig jwtConfig;
 
+    @Autowired
+    private UserTokenRepository userTokenRepository;
+
+    @Autowired
+    private RedisUserTokenRepository redisUserTokenRepository;
+
     public String encode(String password) {
         return bCryptPasswordEncoder.encode(password);
     }
@@ -37,7 +47,9 @@ public class AuthenticationService {
         return !this.bCryptPasswordEncoder.matches(password, expected);
     }
 
-    public UserToken generateUserToken(User user) {
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public User generateUserToken(User user) {
         String token = generateToken(user);
         user.setToken(token);
         UserToken userToken = new UserToken();
@@ -46,7 +58,11 @@ public class AuthenticationService {
         userToken.setUserType(user.getUserType().getUserTypeValue());
         userToken.setCreatedAt(Timestamp.from(Instant.now()));
         userToken.setUpdatedAt(Timestamp.from(Instant.now()));
-        return userToken;
+
+        this.userTokenRepository.save(userToken);
+        this.redisUserTokenRepository.save(userToken.toCacheModel());
+
+        return user;
     }
 
     /**

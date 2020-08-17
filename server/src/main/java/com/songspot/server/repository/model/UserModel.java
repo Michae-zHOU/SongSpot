@@ -113,7 +113,7 @@ public abstract class UserModel extends NamedModel {
         user.setUserType(UserType.getType(this.getUserType()));
         user.setGenres(new ArrayList<>()); // TODO
         user.setAvatar(this.getAvatarNonPrimitive());
-        user.setToken(null); // TODO
+        user.setToken(null);
         return user;
     }
 }

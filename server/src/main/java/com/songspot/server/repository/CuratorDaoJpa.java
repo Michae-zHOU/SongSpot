@@ -1,14 +1,12 @@
 package com.songspot.server.repository;
 
 import com.songspot.server.authentication.AuthenticationService;
-import com.songspot.server.controller.model.User;
 import com.songspot.server.controller.model.UserLoginParam;
 import com.songspot.server.controller.model.UserRegisterParam;
 import com.songspot.server.exception.ResourceDuplicatedException;
 import com.songspot.server.exception.ResourceNotFoundException;
 import com.songspot.server.exception.UserAuthenticationException;
 import com.songspot.server.repository.model.Curator;
-import com.songspot.server.repository.model.UserToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -62,10 +60,6 @@ public class CuratorDaoJpa {
         if (this.authenticationService.notMatches(userLoginParam.getPassword(), curator.getPassword()))
             throw new UserAuthenticationException("User " + username + " failed to log in");
 
-        User user = curator.toUserPresentational();
-        UserToken token = authenticationService.generateUserToken(user);
-        this.userTokenRepository.save(token);
-
-        return user;
+        return authenticationService.generateUserToken(curator.toUserPresentational());
     }
 }
