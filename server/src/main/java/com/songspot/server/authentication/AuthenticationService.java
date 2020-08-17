@@ -31,9 +31,6 @@ public class AuthenticationService {
     private SecretService secretService;
 
     @Autowired
-    private JwtConfig jwtConfig;
-
-    @Autowired
     private UserTokenRepository userTokenRepository;
 
     @Autowired
@@ -46,7 +43,6 @@ public class AuthenticationService {
     public boolean notMatches(String password, String expected) {
         return !this.bCryptPasswordEncoder.matches(password, expected);
     }
-
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public User generateUserToken(User user) {
