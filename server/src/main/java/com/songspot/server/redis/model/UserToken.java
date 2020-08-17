@@ -3,17 +3,20 @@ package com.songspot.server.redis.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.redis.core.RedisHash;
 
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import java.io.Serializable;
 
 @RedisHash(value = "UserToken", timeToLive = 36000000)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserToken {
+public class UserToken implements Serializable {
 
     @Id
     private String index;
 
     private String token;
 
+    public UserToken() {
+    }
 
     public UserToken(String index, String token) {
         this.index = index;
