@@ -1,7 +1,9 @@
 package com.songspot.server.controller;
 
-import com.songspot.server.controller.model.*;
-import com.songspot.server.controller.util.TestHelpers;
+import com.songspot.server.controller.model.User;
+import com.songspot.server.controller.model.UserLoginParam;
+import com.songspot.server.controller.model.UserRegisterParam;
+import com.songspot.server.controller.model.UserType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

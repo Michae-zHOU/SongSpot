@@ -1,6 +1,5 @@
 package com.songspot.server.authentication;
 
-import com.songspot.server.configuration.JwtConfig;
 import com.songspot.server.controller.model.User;
 import com.songspot.server.controller.model.UserType;
 import com.songspot.server.redis.RedisUserTokenRepository;
