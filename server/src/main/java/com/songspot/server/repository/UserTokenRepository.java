@@ -1,6 +1,5 @@
 package com.songspot.server.repository;
 
-import com.songspot.server.repository.model.DemoTrack;
 import com.songspot.server.repository.model.UserToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
