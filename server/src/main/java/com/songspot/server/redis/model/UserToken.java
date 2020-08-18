@@ -1,9 +1,9 @@
 package com.songspot.server.redis.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 
 @RedisHash(value = "UserToken", timeToLive = 36000000)
