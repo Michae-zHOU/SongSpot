@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "authentication")
 public class AuthenticationConfig {
     private boolean enableDefaultUser;
+    private boolean enableUserHeader;
     private String defaultUsername;
     private String defaultUserTimezone;
     private String defaultUserEmail;
@@ -17,6 +18,14 @@ public class AuthenticationConfig {
 
     public void setDefaultUsername(String defaultUsername) {
         this.defaultUsername = defaultUsername;
+    }
+
+    public boolean isEnableUserHeader() {
+        return enableUserHeader;
+    }
+
+    public void setEnableUserHeader(boolean enableUserHeader) {
+        this.enableUserHeader = enableUserHeader;
     }
 
     public boolean isEnableDefaultUser() {
