@@ -1,9 +1,7 @@
 package com.songspot.server.controller;
 
-import com.songspot.server.controller.model.User;
-import com.songspot.server.controller.model.UserLoginParam;
-import com.songspot.server.controller.model.UserRegisterParam;
-import com.songspot.server.controller.model.UserType;
+import com.songspot.server.controller.model.*;
+import com.songspot.server.controller.util.TestHelpers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -44,20 +45,20 @@ public class UserControllerTest {
 
     @Test
     public void testUserController() {
-        Long registerCuratorId = createCurator();
+        User registerCurator = createCurator();
+        User loginCurator = LoginCurator();
 
-        Long loginCuratorId = LoginCurator();
+        assertEquals(registerCurator.getId(), loginCurator.getId());
 
-        assertEquals(registerCuratorId, loginCuratorId);
+        User registerArtist = createArtist();
+        User loginArtist = LoginArtist();
 
-        Long registerArtistId = createArtist();
+        assertEquals(registerArtist.getId(), loginArtist.getId());
 
-        Long loginArtistId = LoginArtist();
-
-        assertEquals(registerArtistId, loginArtistId);
+        validateCuratorTokenAuth(loginCurator);
     }
 
-    public Long createCurator() {
+    public User createCurator() {
         byte[] avatar = new byte[]{0, 0, 0, 0};
         UserRegisterParam params = new UserRegisterParam(CURATOR,
                 CURATOR_PASSWORD,
@@ -67,11 +68,10 @@ public class UserControllerTest {
                 "www.usercontrollercurator.com",
                 avatar);
 
-        User user = getUser(avatar, params, UserType.CURATOR);
-        return user.getId();
+        return getUser(avatar, params, UserType.CURATOR);
     }
 
-    public Long createArtist() {
+    public User createArtist() {
         byte[] avatar = new byte[]{0, 0, 0, 0};
         UserRegisterParam params = new UserRegisterParam(ARTIST,
                 ARTIST_PASSWORD,
@@ -81,20 +81,17 @@ public class UserControllerTest {
                 "www.usercontrollerartist.com",
                 avatar);
 
-        User user = getUser(avatar, params, UserType.ARTIST);
-        return user.getId();
+        return getUser(avatar, params, UserType.ARTIST);
     }
 
-    public Long LoginCurator() {
+    public User LoginCurator() {
         UserLoginParam params = new UserLoginParam(CURATOR, CURATOR_PASSWORD, UserType.CURATOR);
-        User user = getUser(params, UserType.CURATOR);
-        return user.getId();
+        return getUser(params, UserType.CURATOR);
     }
 
-    public Long LoginArtist() {
+    public User LoginArtist() {
         UserLoginParam params = new UserLoginParam(ARTIST, ARTIST_PASSWORD, UserType.ARTIST);
-        User user = getUser(params, UserType.ARTIST);
-        return user.getId();
+        return getUser(params, UserType.ARTIST);
     }
 
     private User getUser(byte[] avatar, UserRegisterParam params, UserType userType) {
@@ -130,5 +127,19 @@ public class UserControllerTest {
         assertNotNull(user.getToken());
         assertEquals(userType, user.getUserType());
         return user;
+    }
+
+
+    public void validateCuratorTokenAuth(User user) {
+        ResponseEntity<DemoTrack[]> response = this.restTemplate.exchange(
+                ROOT_URL + randomServerPort + CuratorController.CURATOR_VIEW_ROUTE,
+                HttpMethod.GET,
+                TestHelpers.appendAuthToken(null, user.getToken()),
+                DemoTrack[].class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        List<DemoTrack> tracks = Arrays.asList(response.getBody());
+        assertEquals(0, tracks.size());
     }
 }

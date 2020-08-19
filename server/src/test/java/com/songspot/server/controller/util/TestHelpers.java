@@ -25,6 +25,21 @@ public class TestHelpers {
         return new HttpEntity<>(body, headers);
     }
 
+
+    public static <T> HttpEntity appendAuthToken(T body, String token, String... eTags) {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set(UserClient.USER_TOKEN_KEY, token);
+
+        if (eTags.length > 0)
+            headers.setIfNoneMatch(eTags[0]);
+
+        if (body == null) {
+            return new HttpEntity<>(headers);
+        }
+
+        return new HttpEntity<>(body, headers);
+    }
+
     public static void assertByteArray(byte[] expected, byte[] actual) {
         assertEquals(expected.length, actual.length);
         for(int idx = 0; idx < expected.length; idx++) {
