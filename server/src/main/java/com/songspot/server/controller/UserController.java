@@ -27,20 +27,28 @@ public class UserController {
     @Autowired
     private ArtistDaoJpa artistDaoJpa;
 
+
     @PostMapping(LOGIN_ROUTE)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.FOUND)
     public User userLogin(@Valid @RequestBody UserLoginParam userLoginParam) {
-        return null;
+        UserType userType = userLoginParam.getUserType();
+
+        return switch (userType) {
+            case CURATOR -> this.curatorDaoJpa.getCurator(userLoginParam);
+            case ARTIST -> this.artistDaoJpa.getArtist(userLoginParam);
+            default -> throw new IllegalArgumentException("User login failed. Unknown user type.");
+        };
     }
 
     @PostMapping(REGISTER_ROUTE)
     @ResponseStatus(HttpStatus.CREATED)
     public User userRegister(@Valid @RequestBody UserRegisterParam userRegisterParam) {
         UserType newUserType = userRegisterParam.getUserType();
+
         return switch (newUserType) {
             case CURATOR -> this.curatorDaoJpa.createCurator(userRegisterParam);
             case ARTIST -> this.artistDaoJpa.createArtist(userRegisterParam);
-            default -> throw new IllegalArgumentException("New user registeration failed. Unknown user type.");
+            default -> throw new IllegalArgumentException("New user registration failed. Unknown user type.");
         };
     }
 

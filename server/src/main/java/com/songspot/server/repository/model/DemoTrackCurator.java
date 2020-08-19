@@ -3,7 +3,7 @@ package com.songspot.server.repository.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "demo_track_curator")
+@Table(name = "demo_track_curators")
 public class DemoTrackCurator {
 
     @EmbeddedId

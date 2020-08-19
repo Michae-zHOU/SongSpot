@@ -35,4 +35,14 @@ public enum UserType {
     public int getUserTypeValue() {
         return this.value;
     }
+
+    public String toString() {
+        return switch (this.value) {
+            case 0 -> "artist";
+            case 1 -> "curator";
+            case 2 -> "admin";
+            case 3 -> "superuser";
+            default -> "unknown";
+        };
+    }
 }

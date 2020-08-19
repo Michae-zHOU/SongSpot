@@ -11,5 +11,5 @@ public interface CuratorAccountRepository extends JpaRepository<CuratorAccount, 
 
     List<CuratorAccount> findAllByCuratorIdAndValidated(Long curator, Boolean validated);
 
-    List<CuratorAccount> findAllByAccountId(Long accountId);
+    List<CuratorAccount> findAllByLinkedAccountId(Long accountId);
 }

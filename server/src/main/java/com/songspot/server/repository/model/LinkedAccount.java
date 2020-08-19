@@ -3,13 +3,13 @@ package com.songspot.server.repository.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "account")
-public class AccountModel {
+@Table(name = "linked_accounts")
+public class LinkedAccount {
     @Id
-    @GeneratedValue(generator = "account_generator")
+    @GeneratedValue(generator = "linked_account_generator")
     @SequenceGenerator(
-            name = "account_generator",
-            sequenceName = "account_sequence",
+            name = "linked_account_generator",
+            sequenceName = "linked_account_sequence",
             initialValue = 100
     )
     private Long id;
