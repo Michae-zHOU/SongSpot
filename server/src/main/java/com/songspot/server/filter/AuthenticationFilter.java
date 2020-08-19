@@ -70,6 +70,7 @@ public class AuthenticationFilter implements Filter {
                 }
                 if (this.authenticationConfig.isEnableUserHeader() && UserClient.USER_NAME_KEY.equals(name)) {
                     username = URLDecoder.decode(val, StandardCharsets.UTF_8.toString());
+                    MDC.put(UserClient.USER_NAME_KEY, username);
                     break;
                 }
             }
