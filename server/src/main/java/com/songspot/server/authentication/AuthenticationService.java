@@ -1,5 +1,6 @@
 package com.songspot.server.authentication;
 
+import com.songspot.server.configuration.JwtConfig;
 import com.songspot.server.controller.model.User;
 import com.songspot.server.controller.model.UserType;
 import com.songspot.server.redis.RedisUserTokenRepository;
@@ -9,13 +10,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -34,6 +36,9 @@ public class AuthenticationService {
 
     @Autowired
     private RedisUserTokenRepository redisUserTokenRepository;
+
+    @Autowired
+    private JwtConfig jwtConfig;
 
     public String encode(String password) {
         return bCryptPasswordEncoder.encode(password);
@@ -71,13 +76,16 @@ public class AuthenticationService {
     public User parseToken(String token) {
         try {
             String secret = secretService.getSecretOf(SignatureAlgorithm.HS256);
+            Key key = new SecretKeySpec(DatatypeConverter.parseBase64Binary(secret), SignatureAlgorithm.HS256.getJcaName());
+
             Claims body = Jwts.parserBuilder()
-                    .setSigningKey(secret)
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
+
             User user = new User();
-            user.setUsername(body.getSubject());
+            user.setUsername((String) body.get("username"));
             user.setId(Long.parseLong((String) body.get("userId")));
             user.setUserType(UserType.getType((String) body.get("userType")));
 
@@ -96,11 +104,12 @@ public class AuthenticationService {
      * @return the JWT token
      */
     private String generateToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getUsername());
+        Claims claims = Jwts.claims();
+        claims.put("username", user.getUsername());
         claims.put("userId", user.getId().toString());
         claims.put("userType", user.getUserType().toString());
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         String secret = secretService.getSecretOf(SignatureAlgorithm.HS256);
+        Key key = new SecretKeySpec(DatatypeConverter.parseBase64Binary(secret), SignatureAlgorithm.HS256.getJcaName());
 
         return Jwts.builder()
                 .setClaims(claims)
