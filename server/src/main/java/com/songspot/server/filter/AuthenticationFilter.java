@@ -36,8 +36,17 @@ public class AuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+
+
+        String requestUri = request.getRequestURI();
+        if (UserController.REGISTER_ROUTE.equals(requestUri) || UserController.LOGIN_ROUTE.equals(requestUri)) {
+            LOGGER.info(requestUri);
+            chain.doFilter(req, res);
+            return;
+        }
 
         Enumeration<String> headerNames = request.getHeaderNames();
 
@@ -47,18 +56,19 @@ public class AuthenticationFilter implements Filter {
             while (headerNames.hasMoreElements()) {
                 String name = headerNames.nextElement();
                 String val = request.getHeader(name);
-                if (UserClient.USER_TOKEN.equals(name)) {
+                if (UserClient.USER_TOKEN_KEY.equals(name)) {
                     String token = URLDecoder.decode(val, StandardCharsets.UTF_8.toString());
                     User user = authenticationService.parseToken(token);
-                    if(Objects.isNull(user)) {
+                    if (Objects.isNull(user)) {
                         tokenExpired = true;
                         break;
                     }
 
                     username = user.getUsername();
+                    MDC.put(UserClient.USER_NAME_KEY, username);
                     break;
                 }
-                if(this.authenticationConfig.isEnableUserHeader() && UserClient.USER_NAME_KEY.equals(name)) {
+                if (this.authenticationConfig.isEnableUserHeader() && UserClient.USER_NAME_KEY.equals(name)) {
                     username = URLDecoder.decode(val, StandardCharsets.UTF_8.toString());
                     break;
                 }
@@ -70,14 +80,14 @@ public class AuthenticationFilter implements Filter {
                 username = this.authenticationConfig.getDefaultUsername();
                 MDC.put(UserClient.USER_NAME_KEY, username);
             } else {
-                LOGGER.error(request.getRequestURI() + ": user not logged in");
+                LOGGER.error(requestUri + ": user not logged in");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
         }
 
-        LOGGER.info(request.getRequestURI());
-        if (UserController.LOGOUT_ROUTE.equals(request.getRequestURI())) {
+        LOGGER.info(requestUri);
+        if (UserController.LOGOUT_ROUTE.equals(requestUri)) {
             Cookie cookie = new Cookie("proxy", null);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
@@ -85,7 +95,7 @@ public class AuthenticationFilter implements Filter {
             response.addCookie(cookie);
             response.addHeader("Location", "https://www.songspot.cn/home/index.html");
         }
-        if (tokenExpired) {
+        if (!this.authenticationConfig.isEnableDefaultUser() && tokenExpired) {
             Cookie cookie = new Cookie("proxy", null);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
