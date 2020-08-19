@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,11 @@ public class CuratorController {
     @GetMapping(CURATOR_VIEW_ROUTE)
     @ResponseStatus(HttpStatus.OK)
     public List<DemoTrack> getTracks() {
-        String username = MDC.get(UserClient.USER_NAME_KEY);
-        return trackDaoJpa.getDemoTrackOfCurator(username);
+        try {
+            String username = MDC.get(UserClient.USER_NAME_KEY);
+            return trackDaoJpa.getDemoTrackOfCurator(username);
+        } catch (Exception ex) {
+            return new ArrayList<>();
+        }
     }
 }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -42,7 +43,7 @@ public class AuthenticationFilter implements Filter {
 
 
         String requestUri = request.getRequestURI();
-        if (UserController.REGISTER_ROUTE.equals(requestUri) || UserController.LOGIN_ROUTE.equals(requestUri)) {
+        if (doBypass(requestUri)) {
             LOGGER.info(requestUri);
             chain.doFilter(req, res);
             return;
@@ -66,6 +67,7 @@ public class AuthenticationFilter implements Filter {
 
                     username = user.getUsername();
                     MDC.put(UserClient.USER_NAME_KEY, username);
+                    LOGGER.info("User " + username + " logged in");
                     break;
                 }
                 if (this.authenticationConfig.isEnableUserHeader() && UserClient.USER_NAME_KEY.equals(name)) {
@@ -77,18 +79,25 @@ public class AuthenticationFilter implements Filter {
         }
 
         if (Objects.isNull(username)) {
-            if (this.authenticationConfig.isEnableDefaultUser()) {
+            if (this.authenticationConfig.isEnableDefaultUser() && !tokenExpired) {
                 username = this.authenticationConfig.getDefaultUsername();
                 MDC.put(UserClient.USER_NAME_KEY, username);
             } else {
                 LOGGER.error(requestUri + ": user not logged in");
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                Cookie cookie = new Cookie("proxy", null);
+                cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+                response.addHeader("Location", "https://www.songspot.cn/login");
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 return;
             }
         }
 
         LOGGER.info(requestUri);
         if (UserController.LOGOUT_ROUTE.equals(requestUri)) {
+            LOGGER.info("User " + username + " logged out");
             Cookie cookie = new Cookie("proxy", null);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
@@ -96,14 +105,10 @@ public class AuthenticationFilter implements Filter {
             response.addCookie(cookie);
             response.addHeader("Location", "https://www.songspot.cn/home/index.html");
         }
-        if (!this.authenticationConfig.isEnableDefaultUser() && tokenExpired) {
-            Cookie cookie = new Cookie("proxy", null);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
-            response.addHeader("Location", "https://www.songspot.cn/login");
-        }
         chain.doFilter(req, res);
+    }
+
+    private boolean doBypass(String requestUri) {
+        return (UserController.REGISTER_ROUTE.equals(requestUri) || UserController.LOGIN_ROUTE.equals(requestUri));
     }
 }

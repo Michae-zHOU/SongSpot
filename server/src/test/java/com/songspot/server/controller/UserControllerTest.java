@@ -19,8 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
@@ -34,6 +33,7 @@ public class UserControllerTest {
     private static final String CURATOR = "UserController_Curator";
     private static final String CURATOR_PASSWORD = "UserController_Curator_Password";
     private static final String ROOT_URL = "http://localhost:";
+    private static final String INVALID_TOKEN = "invalid_token";
     private final TestRestTemplate restTemplate = new TestRestTemplate();
     @LocalServerPort
     int randomServerPort;
@@ -43,19 +43,27 @@ public class UserControllerTest {
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
 
+    /**
+     * Curator Test Sequence:
+     *      register -> login -> api with valid token -> api with invalid token
+     *
+     * Artist Test Sequence:
+     *      register -> login -> api with valid token -> api with invalid token
+     */
     @Test
     public void testUserController() {
         User registerCurator = createCurator();
         User loginCurator = LoginCurator();
-
         assertEquals(registerCurator.getId(), loginCurator.getId());
+
+        validateCuratorTokenAuth(loginCurator);
+        validateInvalidCuratorTokenAuth(loginCurator);
 
         User registerArtist = createArtist();
         User loginArtist = LoginArtist();
 
         assertEquals(registerArtist.getId(), loginArtist.getId());
 
-        validateCuratorTokenAuth(loginCurator);
     }
 
     public User createCurator() {
@@ -141,5 +149,42 @@ public class UserControllerTest {
         assertNotNull(response.getBody());
         List<DemoTrack> tracks = Arrays.asList(response.getBody());
         assertEquals(0, tracks.size());
+    }
+
+    public void validateInvalidCuratorTokenAuth(User user) {
+        user.setToken(INVALID_TOKEN);
+        ResponseEntity<DemoTrack[]> response = this.restTemplate.exchange(
+                ROOT_URL + randomServerPort + CuratorController.CURATOR_VIEW_ROUTE,
+                HttpMethod.GET,
+                TestHelpers.appendAuthToken(null, user.getToken()),
+                DemoTrack[].class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    public void validateArtistTokenAuth(User user) {
+        ResponseEntity<DemoTrack[]> response = this.restTemplate.exchange(
+                ROOT_URL + randomServerPort + ArtistController.ARTIST_VIEW_TRACKS_ROUTE,
+                HttpMethod.GET,
+                TestHelpers.appendAuthToken(null, user.getToken()),
+                DemoTrack[].class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        List<DemoTrack> tracks = Arrays.asList(response.getBody());
+        assertEquals(0, tracks.size());
+    }
+
+    public void validateInvalidArtistTokenAuth(User user) {
+        user.setToken(INVALID_TOKEN);
+        ResponseEntity<DemoTrack[]> response = this.restTemplate.exchange(
+                ROOT_URL + randomServerPort + ArtistController.ARTIST_VIEW_TRACKS_ROUTE,
+                HttpMethod.GET,
+                TestHelpers.appendAuthToken(null, user.getToken()),
+                DemoTrack[].class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertNull(response.getBody());
     }
 }

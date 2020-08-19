@@ -88,8 +88,6 @@ public class DemoTrackDaoJpa {
                 .findAllByCuratorId(curator.getId()).stream().map(t -> t.getDemoTrack().getId())
                 .collect(Collectors.toList());
 
-        if (demoTrackIds.size() == 0)
-            return new ArrayList<>();
         return this.demoTrackRepository.findAllById(demoTrackIds)
                 .stream().map(DemoTrack::toPresentationModel).collect(Collectors.toList());
     }
