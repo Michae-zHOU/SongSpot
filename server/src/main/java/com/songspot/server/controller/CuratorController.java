@@ -3,6 +3,8 @@ package com.songspot.server.controller;
 import com.songspot.server.client.UserClient;
 import com.songspot.server.controller.model.DemoTrack;
 import com.songspot.server.repository.DemoTrackDaoJpa;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +18,12 @@ import java.util.List;
 public class CuratorController {
 
     protected static final String CURATOR_VIEW_ROUTE = "/curator/view/";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CuratorController.class);
     @Autowired
     private DemoTrackDaoJpa trackDaoJpa;
 
     @GetMapping(CURATOR_VIEW_ROUTE)
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public List<DemoTrack> getTracks() {
         String username = MDC.get(UserClient.USER_NAME_KEY);
         return trackDaoJpa.getDemoTrackOfCurator(username);
